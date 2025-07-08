@@ -173,29 +173,30 @@ class ExpressoTour():
         else:
             return dia_s, 'Falha ao comprar passagem!'
 
-    def op_cancela_passagem(self, cpf, id_passagem): # cancela passagem pelo id da passagem
+    def op_cancela_passagem(self, cpf, id_passagem): # cancela passagem pelo id da passagem 
         
         if self.op_verifica_cadastro(cpf):
-            passagens_cad = self._cadastros[cpf].historico_pass.passagens
-
-            for passagem in passagens_cad:
-                
-                if passagem._id_passagem == id_passagem:
-                    passagens_cad.remove(passagem)
-                    return True, 'Passagem cancelada com sucesso!'
+            passagens_to_check = self._cadastros[cpf].historico_pass.passagens
+        elif cpf in self._passagens:
+            passagens_to_check = self._passagens[cpf]
         else:
-            compras_cli = self._passagens[cpf]
-            
-            situacao = True
+            return False, 'CPF não encontrado no sistema ou nenhuma passagem comprada!'
 
-            for compra in compras_cli:
-                if compra._passagem._id_passagem == id_passagem:
-                    compras_cli.remove(compra)
-                    return situacao, 'Passagem cancelada com sucesso!'
-            
-            situacao = False
+        for passagem in passagens_to_check:
+            if passagem._id_passagem == id_passagem:
+                
+                
+                dia_passagem = passagem._data_ida 
+                poltrona_passagem = passagem._poltrona
+
+                
+                if dia_passagem in self.onibus._poltronas:
+                    self.onibus._poltronas[dia_passagem][poltrona_passagem - 1] = poltrona_passagem
+                
+                passagens_to_check.remove(passagem)
+                return True, 'Passagem cancelada com sucesso!'
         
-        return situacao, 'Erro! PASSAGEM NÃO ENCONTRADA!' 
+        return False, 'Erro! PASSAGEM NÃO ENCONTRADA!' 
 
     def op_verifica_passagens(self, cpf): # verifica passagens compradas por cliente, caso tenha
         
