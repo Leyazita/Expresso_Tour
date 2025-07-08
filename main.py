@@ -39,7 +39,6 @@ def op_cadastro_cliente():
     return expresso.op_cadastra_cliente(nome, cpf, nasc, senha)
         
 def op_fazer_login():
-    os.system('clear') or None
     print('|', '-' * 38, '|')
     print('|', f'{f"MENU DE LOGIN":^38}', '|')
     print('|', '-' * 38, '|')
@@ -74,7 +73,7 @@ def op_comprar_passagem():
     tipo_pag = int(input('|Tipo de pagamento -> [1] - Cartão -- [2] - Dinheiro -- [3] - Pix|: '))
     barra_div()
 
-    os.system('clear') or None
+    
     return expresso.op_compra_passagem(cpf, nome, origem, destino, polt, resp, tipo_pag)
     '''except:
         return False, 'Falha na operação!'''
@@ -86,7 +85,7 @@ def op_verificar_vagas_onibus():
     dia = int(input('|Digite aqui -> '))
     print('Procurando vagas...')
     sleep(1.5)
-    os.system('clear') or None
+    
 
     return expresso.op_exibe_poltronas(dia)
 
@@ -148,48 +147,48 @@ def cliente_logado(nome, cpf):
         if op_cli == 0:
             print('Deslogando...')
             sleep(1.5)
-            os.system('clear') or None
+            
             break
 
         elif op_cli == 1:
             op_verificar_viagens_disp()
             sleep(2)
-            os.system('clear') or None 
+             
 
         elif op_cli == 2:
             _, mensagem = op_comprar_passagem()
             print(f'{mensagem:^40}')
             sleep(3.5)
-            os.system('clear') or None
+            
             
         elif op_cli == 3:
             _, mensagem = op_verificar_vagas_onibus()
             print(mensagem)
             sleep(3)
-            os.system('clear') or None
+            
 
         elif op_cli == 4:
             _, mensagem = op_cancelar_passagem()
             print(mensagem)
             sleep(2.5)
-            os.system('clear') or None
+            
 
         elif op_cli == 5:
             _, mensagem = op_verifica_passagens_cli(cpf)
             print(mensagem)
             sleep(2.5)
-            os.system('clear') or None
+            
 
         elif op_cli == 6:
             _, mensagem = op_altera_senha(cpf)
             print(mensagem)
             sleep(2.5)
-            os.system('clear') or None
+            
         
         else:
             print('Valor inválido!')
             sleep(2.5)
-            os.system('clear') or None
+            
 
 expresso = ExpressoTour()
 while True:
@@ -204,14 +203,14 @@ while True:
         _, mensagem = op_cadastro_cliente()
         print(mensagem)
         sleep(2)
-        os.system('clear') or None
+        
     
     elif op == 2:
         (situacao, mensagem), (nome, cpf) = op_fazer_login()
         print(mensagem)
         sleep(1.5)
         barra_div()
-        os.system('clear') or None
+        
 
         if situacao == True:
             cliente_logado(nome, cpf)
@@ -219,27 +218,27 @@ while True:
     elif op == 3:
         op_verificar_viagens_disp()
         sleep(2)
-        os.system('clear') or None  
+          
     
     elif op == 4:
         _, mensagem = op_comprar_passagem()
         print(f'{mensagem:^40}')
         sleep(3.5)
-        os.system('clear') or None
+        
     
     elif op == 5:
         _, mensagem = op_verificar_vagas_onibus()
         print(mensagem)
         sleep(3)
-        os.system('clear') or None
+        
 
     elif op == 6:
         _, mensagem = op_cancelar_passagem()
         print(mensagem)
         sleep(2.5)
-        os.system('clear') or None
+        
 
     else:
         print('Valor inválido!')
         sleep(2.5)
-        os.system('clear') or None
+        
