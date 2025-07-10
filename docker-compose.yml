@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: expresso_postgres
+    environment:
+      POSTGRES_USER: expresso
+      POSTGRES_PASSWORD: senha123
+      POSTGRES_DB: expresso_tour
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
