@@ -54,23 +54,12 @@ class Passagem:
         return passagens
 
     
-    # def cancelar(cpf, id_passagem):
-    #     conn = conectar()
-    #     cur = conn.cursor()
-    #     # cur.execute("SELECT poltrona, data_ida FROM passagem WHERE id = %s AND cpf_cliente = %s", (id_passagem, cpf))
-    #     # resultado = cur.fetchone()
-    #     # poltrona, data_ida = resultado
-        
-    #     cur.execute("DELETE FROM passagem WHERE id = %s AND cpf_cliente = %s", (id_passagem, cpf))
-    #     # Onibus.liberar_poltrona(data_ida, poltrona) 
-    #     conn.commit()
-    #     conn.close()
     @staticmethod
     def cancelar(cpf, id_passagem):
         conn = conectar()
         cur = conn.cursor()
 
-        # Buscar a poltrona e a data_ida antes de deletar
+
         cur.execute("SELECT poltrona, data_ida FROM passagem WHERE id = %s AND cpf_cliente = %s", (id_passagem, cpf))
         resultado = cur.fetchone()
 

@@ -121,10 +121,9 @@ class ExpressoTour:
         ocupadas = [p[0] for p in Onibus.listar_poltronas_ocupadas(dia_s) if p[1]]
         if poltrona in ocupadas:
             return False, 'Poltrona já ocupada.'
-        data_ida = converter_dia_para_data_string(dia_s)  # Função que transforma 'Segunda' em '2025-07-14' por exemplo
+        data_ida = converter_dia_para_data_string(dia_s)
         passagem = Passagem(cpf, data_ida, '00:00', origem, destino, 100.0, tipo_pag, poltrona)
 
-        # passagem = Passagem(cpf, dia_s, '00:00', origem, destino, 100.0, tipo_pag, poltrona)
         passagem.salvar()
         Onibus.ocupar_poltrona(dia_s, poltrona)
         passagem.exibe_passagem(nome)
