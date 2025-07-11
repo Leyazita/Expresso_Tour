@@ -46,6 +46,8 @@ def cliente_logado(nome, cpf):
         print('| [4] - Cancelar Passagem', end=f'{"|":>25}\n')
         print('| [5] - Verificar minhas passagens', end=f'{"|":>16}\n')
         print('| [6] - Alterar senha da conta', end=f'{"|":>20}\n')
+        print('| [7] - Alterar nome', end=f'{"|":>30}\n')
+        print('| [8] - Alterar CPF', end=f'{"|":>32}\n')
         print('| [0] - Deslogar', end=f'{"|":>34}\n')
         print('-'*50)
 
@@ -88,6 +90,19 @@ def cliente_logado(nome, cpf):
                 print(msg)
             else:
                 print('Senha incorreta!')
+        if op == 7:
+            novo_nome = input('|Novo nome: ').strip()
+            _, msg = expresso.op_altera_nome(cpf, novo_nome)
+            print(msg)
+            if _:
+                nome = novo_nome  # atualiza nome local
+
+        elif op == 8:
+            novo_cpf = input('|Novo CPF (somente números): ').strip()
+            _, msg = expresso.op_altera_cpf(cpf, novo_cpf)
+            print(msg)
+            if _:
+                cpf = novo_cpf  # atualiza cpf local
         sleep(2.5)
         os.system('clear') or None
 

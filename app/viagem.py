@@ -59,3 +59,14 @@ class Onibus:
                 cur.execute("INSERT INTO poltrona_ocupada (dia_semana, poltrona, ocupado) VALUES (%s, %s, FALSE) ON CONFLICT DO NOTHING", (dia, i))
         conn.commit()
         conn.close()
+        
+    @staticmethod
+    def liberar_poltrona(dia_semana, poltrona):
+        conn = conectar()
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE poltrona_ocupada SET ocupado = FALSE WHERE dia_semana = %s AND poltrona = %s",
+            (dia_semana, poltrona)
+        )
+        conn.commit()
+        conn.close()

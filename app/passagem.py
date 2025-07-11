@@ -1,4 +1,5 @@
 from database import conectar
+from viagem import Onibus
 
 class Passagem:
     def __init__(self, cpf_cliente, data_ida, hora_ida, origem, destino, valor, pagamento, poltrona):
@@ -52,10 +53,48 @@ class Passagem:
         conn.close()
         return passagens
 
+    
+    # def cancelar(cpf, id_passagem):
+    #     conn = conectar()
+    #     cur = conn.cursor()
+    #     # cur.execute("SELECT poltrona, data_ida FROM passagem WHERE id = %s AND cpf_cliente = %s", (id_passagem, cpf))
+    #     # resultado = cur.fetchone()
+    #     # poltrona, data_ida = resultado
+        
+    #     cur.execute("DELETE FROM passagem WHERE id = %s AND cpf_cliente = %s", (id_passagem, cpf))
+    #     # Onibus.liberar_poltrona(data_ida, poltrona) 
+    #     conn.commit()
+    #     conn.close()
     @staticmethod
     def cancelar(cpf, id_passagem):
         conn = conectar()
         cur = conn.cursor()
-        cur.execute("DELETE FROM passagem WHERE id = %s AND cpf_cliente = %s", (id_passagem, cpf))
-        conn.commit()
+
+        # Buscar a poltrona e a data_ida antes de deletar
+        cur.execute("SELECT poltrona, data_ida FROM passagem WHERE id = %s AND cpf_cliente = %s", (id_passagem, cpf))
+        resultado = cur.fetchone()
+
+        if resultado:
+            poltrona, data_ida = resultado
+
+            # Converter data_ida em nome do dia da semana:
+            dia_semana = data_ida.strftime('%A')
+            dias_map = {
+                'Monday': 'Segunda',
+                'Wednesday': 'Quarta',
+                'Friday': 'Sexta'
+            }
+            dia_semana = dias_map.get(dia_semana)
+
+            if dia_semana:
+                from viagem import Onibus
+                Onibus.liberar_poltrona(dia_semana, poltrona)
+
+            # Agora sim, apagar a passagem
+            cur.execute("DELETE FROM passagem WHERE id = %s AND cpf_cliente = %s", (id_passagem, cpf))
+            conn.commit()
+        else:
+            conn.close()
+            raise Exception("Passagem não encontrada!")
+
         conn.close()

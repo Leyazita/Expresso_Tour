@@ -1,11 +1,31 @@
 from cliente import Cliente
 from passagem import Passagem
 from viagem import Onibus, Viagem
+from datetime import datetime, timedelta
+
+def converter_dia_para_data_string(dia_semana_nome):
+        dias_semana = {
+            'Segunda': 0,
+            'Quarta': 2,
+            'Sexta': 4
+        }
+        hoje = datetime.now()
+        alvo = dias_semana.get(dia_semana_nome)
+
+        if alvo is None:
+            raise ValueError("Dia inválido!")
+
+        delta_dias = (alvo - hoje.weekday()) % 7
+        if delta_dias == 0:
+            delta_dias = 7  # Garante sempre a próxima ocorrência, não hoje
+
+        data = hoje + timedelta(days=delta_dias)
+        return data.strftime('%Y-%m-%d')
 
 class ExpressoTour:
     def __init__(self):
         self.onibus = Onibus()
-        self.viagem = Viagem()
+        self.viagem = Viagem(dia_semana='Segunda')
 
     def op_cadastra_cliente(self, nome, cpf, nasc, senha):
         if not Cliente.buscar_por_cpf(cpf):
@@ -28,6 +48,24 @@ class ExpressoTour:
             cliente.alterar_senha(senha_nova)
             return True, 'Senha alterada com sucesso!'
         return False, 'Cliente não encontrado.'
+    
+    def op_altera_nome(self, cpf, nome_novo):
+        cliente = Cliente.buscar_por_cpf(cpf)
+        if cliente:
+            cliente.alterar_nome(nome_novo)
+            return True, 'Nome alterado com sucesso!'
+        return False, 'Cliente não encontrado.'
+
+    def op_altera_cpf(self, cpf_atual, cpf_novo):
+        cliente = Cliente.buscar_por_cpf(cpf_atual)
+        if cliente:
+            # Verifica se o novo CPF já está cadastrado
+            if Cliente.buscar_por_cpf(cpf_novo):
+                return False, '⚠️ CPF já cadastrado.'
+            cliente.alterar_cpf(cpf_novo)
+            return True, 'CPF alterado com sucesso!'
+        return False, 'Cliente não encontrado.'
+
 
     def op_verifica_viagens(self):
         viagens = Viagem.listar()
@@ -61,6 +99,7 @@ class ExpressoTour:
             if i == 10:
                 print('|\n' + '-'*39)
         return True, 'Exibição de poltronas concluída.'
+    
 
     def op_compra_passagem(self, cpf, nome, origem, destino, poltrona, dia, tipo_pag):
         dia_s = self.op_verifica_dia(dia)
@@ -82,8 +121,10 @@ class ExpressoTour:
         ocupadas = [p[0] for p in Onibus.listar_poltronas_ocupadas(dia_s) if p[1]]
         if poltrona in ocupadas:
             return False, 'Poltrona já ocupada.'
+        data_ida = converter_dia_para_data_string(dia_s)  # Função que transforma 'Segunda' em '2025-07-14' por exemplo
+        passagem = Passagem(cpf, data_ida, '00:00', origem, destino, 100.0, tipo_pag, poltrona)
 
-        passagem = Passagem(cpf, dia_s, '00:00', origem, destino, 100.0, tipo_pag, poltrona)
+        # passagem = Passagem(cpf, dia_s, '00:00', origem, destino, 100.0, tipo_pag, poltrona)
         passagem.salvar()
         Onibus.ocupar_poltrona(dia_s, poltrona)
         passagem.exibe_passagem(nome)
@@ -110,3 +151,8 @@ class ExpressoTour:
     def op_consulta_nome_cli(self, cpf):
         cliente = Cliente.buscar_por_cpf(cpf)
         return cliente.nome if cliente else None
+    
+    
+
+    
+

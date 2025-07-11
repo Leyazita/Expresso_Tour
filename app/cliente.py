@@ -43,6 +43,28 @@ class Cliente:
         cur.execute("UPDATE cliente SET senha = %s WHERE cpf = %s", (nova_senha, self.cpf))
         conn.commit()
         conn.close()
+        
+    def alterar_nome(self, novo_nome):
+        conn = conectar()
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE cliente SET nome = %s WHERE cpf = %s",
+            (novo_nome, self.cpf)
+        )
+        conn.commit()
+        conn.close()
+
+    def alterar_cpf(self, novo_cpf):
+        conn = conectar()
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE cliente SET cpf = %s WHERE cpf = %s",
+            (novo_cpf, self.cpf)
+        )
+        conn.commit()
+        conn.close()
+        self.cpf = novo_cpf  # Atualiza no objeto também
+
 
     def __str__(self):
         return f"Cliente(cpf={self.cpf}, nome={self.nome}, nascimento={self.nascimento})"
